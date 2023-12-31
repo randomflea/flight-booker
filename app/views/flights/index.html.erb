@@ -1,4 +1,4 @@
-<%= form_with model: Flight do |f| %>
+<%= form_with model: Flight, method: :get do |f| %>
     <%= f.label :departure_airport_id %>
     <%= f.collection_select :departure_airport_id, Airport.order(:airport_code), :id, :airport_code %>
 
@@ -6,10 +6,21 @@
     <%= f.collection_select :arrival_airport_id, Airport.order(:airport_code), :id, :airport_code %>
 
     <%= f.label :departure_time %>
-    <%= f.collection_select :departure_time, Flight.order(:departure_time), :id, :departure_time %>
+    <%= f.collection_select :departure_time, Flight.order(:departure_time), :departure_time, :departure_time %>
 
     <%= f.label :num_passengers %>
-    <%= f.select :num_passengers, [1,2,3,4] %>,
+    <%= f.select :num_passengers, [1,2,3,4] %>
 
-    <%= f.submit "Search", data: { turbo_method: :get } %>
+    <%= f.submit "Search" %>
+<% end %>
+
+<% if params[:flight] %>
+    <% search_results = Flight.where(departure_airport_id: params[:flight][:departure_airport_id], arrival_airport_id: params[:flight][:arrival_airport_id], departure_time: params[:flight][:departure_time]) %>
+    <%= form_with model: search_results[1] do |f| %>
+        <%= f.label :departure_airport_id %>
+        <%= f.collection_radio_buttons :departure_airport_id, search_results, :id, :departure_airport_id %>
+    
+        <%= f.submit "Book Flight" %>
+    <% end %>
+
 <% end %>
