@@ -1,0 +1,6 @@
+<%= @booking.flight.departure_airport_id %>
+<ul>
+<% @booking.passengers.each do |passenger| %>
+    <li><%= passenger.name %></li>
+<% end %>
+</ul>

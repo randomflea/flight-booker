@@ -16,11 +16,14 @@
 
 <% if params[:flight] %>
     <% search_results = Flight.where(departure_airport_id: params[:flight][:departure_airport_id], arrival_airport_id: params[:flight][:arrival_airport_id], departure_time: params[:flight][:departure_time]) %>
-    <%= form_with model: search_results[1] do |f| %>
-        <%= f.label :departure_airport_id %>
-        <%= f.collection_radio_buttons :departure_airport_id, search_results, :id, :departure_airport_id %>
-    
+    <% unless search_results.empty? %>
+    <%= form_with model: Booking.new, url: new_booking_path, method: :get do |f| %>
+        <%= f.label :flight_id %>
+        <%= f.collection_radio_buttons :flight_id, search_results, :id, :id %>
+        <%= f.hidden_field :num_passengers, value: params[:flight][:num_passengers] %>
+        
         <%= f.submit "Book Flight" %>
+        <% end %>
     <% end %>
 
 <% end %>
